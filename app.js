@@ -8,17 +8,18 @@ const fastify = Fastify({ logger: true });
 //   connectionString: process.env.DATABASE_URL,
 // });
 
-setInterval(async () => {
-  const numConnections = await pool.query(
-    'SELECT datname, numbackends FROM pg_stat_database;'
-  );
-  fastify.log.info(numConnections.rows);
-}, 5000);
+// setInterval(async () => {
+//   const numConnections = await pool.query(
+//     'SELECT datname, numbackends FROM pg_stat_database;'
+//   );
+//   fastify.log.info(numConnections.rows);
+// }, 5000);
 
 fastify.register(require('./connections'));
 
 fastify.get('/:client', async (req, res) => {
-  const result = await req.db.query('SELECT * FROM items');
+  // should really use node-pg-format for this but...
+  const result = await req.db.query(`SELECT * FROM items`);
   res.send(result.rows);
 });
 
