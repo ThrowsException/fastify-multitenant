@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+
+docker compose down --remove-orphans
+
+docker compose up -d
+
+get_port () {
+  echo $(docker compose port $1 $2 | cut -d: -f2)
+}
+
+mkdir build
+
+POSTGRES_PORT=$(get_port db 5432)
+
+cat << EOF > ./build/test_env
+  export PGHOST=localhost
+  export PGUSER=postgres
+  export PGDATABASE=postgres
+  export PGPASSWORD=password
+  export PGPORT=$POSTGRES_PORT
+EOF
